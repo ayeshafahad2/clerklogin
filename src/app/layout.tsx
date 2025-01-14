@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
 import "./globals.css";
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import Header from "./components/header"; // Ensure the path is correct and case-sensitive
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,16 +22,42 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          style={{
+            backgroundImage: 'url("/background.jpg")', // Replace with your image path
+            minHeight: "100px",
+            color: "white",
+          }}
+        >
+          <Header />
+          <main className="flex flex-col items-center justify-center h-full text-center p-6">
+            <div className="bg-black bg-opacity-50 p-8 rounded-lg shadow-lg">
+              <h1 className="text-4xl font-bold mb-4">Welcome to Lingo</h1>
+              <h3 className="text-xl mb-6">Hi Sir/Mam, lets get started!</h3>
+              <div className="flex justify-center items-center gap-4">
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold shadow-md transition">
+                      Sign In
+                    </button>
+                  </SignInButton>
+                </SignedOut>
+                <SignedIn>
+                  <UserButton afterSignOutUrl="/" />
+                </SignedIn>
+              </div>
+            </div>
+            <div className="mt-8">{children}</div>
+          </main>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
