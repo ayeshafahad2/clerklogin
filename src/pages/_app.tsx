@@ -7,7 +7,6 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 
-import "../styles/globals.css"; // Import your global styles
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
